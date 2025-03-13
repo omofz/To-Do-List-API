@@ -17,7 +17,6 @@ A full-featured task management application built with Django, Django REST Frame
 - **Backend**: Django, Django REST Framework
 - **Frontend**: Django Templates, Bootstrap 5
 - **Database**: SQLite (default), can be configured for PostgreSQL, MySQL, etc.
-- **Authentication**: Django's built-in authentication system
 
 ## Installation
 
