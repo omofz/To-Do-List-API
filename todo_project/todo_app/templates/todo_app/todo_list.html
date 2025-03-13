@@ -1,0 +1,92 @@
+{% extends 'todo_app/base.html' %}
+
+{% block title %}Todo List{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>My Todo List</h1>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'todo_create' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Add New Todo
+        </a>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary active filter-btn" data-filter="all">All</button>
+            <button type="button" class="btn btn-outline-primary filter-btn" data-filter="pending">Pending</button>
+            <button type="button" class="btn btn-outline-primary filter-btn" data-filter="in_progress">In Progress</button>
+            <button type="button" class="btn btn-outline-primary filter-btn" data-filter="completed">Completed</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        {% if todos %}
+            <div class="list-group">
+                {% for todo in todos %}
+                    <a href="{% url 'todo_detail' todo.pk %}" 
+                       class="list-group-item list-group-item-action todo-item {% if todo.status == 'completed' %}todo-completed{% endif %}"
+                       data-status="{{ todo.status }}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ todo.title }}</h5>
+                            <small>
+                                {% if todo.due_date %}
+                                    {% if todo.is_overdue %}
+                                        <span class="todo-overdue">Overdue: {{ todo.due_date|date:"M d, Y" }}</span>
+                                    {% else %}
+                                        Due: {{ todo.due_date|date:"M d, Y" }}
+                                    {% endif %}
+                                {% endif %}
+                            </small>
+                        </div>
+                        <p class="mb-1">{{ todo.description|truncatechars:100 }}</p>
+                        <small>
+                            Status: 
+                            <span class="badge {% if todo.status == 'pending' %}bg-warning{% elif todo.status == 'in_progress' %}bg-info{% else %}bg-success{% endif %}">
+                                {{ todo.get_status_display }}
+                            </span>
+                        </small>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No todos yet. <a href="{% url 'todo_create' %}">Create one</a>!
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Toggle active class
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            const todoItems = document.querySelectorAll('.todo-item');
+            
+            todoItems.forEach(item => {
+                if (filter === 'all' || item.getAttribute('data-status') === filter) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

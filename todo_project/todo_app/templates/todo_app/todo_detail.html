@@ -1,0 +1,62 @@
+{% extends 'todo_app/base.html' %}
+
+{% block title %}{{ todo.title }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>{{ todo.title }}</h1>
+    </div>
+    <div class="col-auto">
+        <div class="btn-group" role="group">
+            <a href="{% url 'todo_update' todo.pk %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'todo_list' %}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col">
+                <span class="badge {% if todo.status == 'pending' %}bg-warning{% elif todo.status == 'in_progress' %}bg-info{% else %}bg-success{% endif %}">
+                    {{ todo.get_status_display }}
+                </span>
+            </div>
+            <div class="col-auto">
+                {% if todo.due_date %}
+                    {% if todo.is_overdue and todo.status != 'completed' %}
+                        <span class="text-danger">
+                            <strong>Overdue:</strong> {{ todo.due_date|date:"F d, Y H:i" }}
+                        </span>
+                    {% else %}
+                        <span>
+                            <strong>Due:</strong> {{ todo.due_date|date:"F d, Y H:i" }}
+                        </span>
+                    {% endif %}
+                {% else %}
+                    <span class="text-muted">No due date</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if todo.description %}
+            <p class="card-text">{{ todo.description|linebreaks }}</p>
+        {% else %}
+            <p class="card-text text-muted">No description provided.</p>
+        {% endif %}
+    </div>
+    <div class="card-footer text-muted">
+        <div class="row">
+            <div class="col">
+                <small>Created: {{ todo.created_at|date:"F d, Y H:i" }}</small>
+            </div>
+            <div class="col-auto">
+                <small>Last updated: {{ todo.updated_at|date:"F d, Y H:i" }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
