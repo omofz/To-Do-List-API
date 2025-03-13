@@ -77,18 +77,6 @@ The API provides the following endpoints:
 
 ## API Usage Examples
 
-### Authentication
-
-Before using the API, you need to authenticate. You can use Django's session-based authentication:
-
-```bash
-# Login
-curl -X POST http://localhost:8000/accounts/login/ \
-     -d "username=yourusername&password=yourpassword" \
-     -H "Content-Type: application/x-www-form-urlencoded" \
-     -c cookies.txt
-```
-
 ### Creating a Task
 
 ```bash
@@ -134,9 +122,6 @@ The application also provides a web interface with the following pages:
 - `/todo/{id}/`: View task details
 - `/todo/{id}/edit/`: Edit a task
 - `/todo/{id}/delete/`: Delete a task
-- `/accounts/login/`: Login page
-- `/accounts/logout/`: Logout action
-- `/register/`: Registration page
 
 ## Database Schema
 
@@ -149,7 +134,6 @@ The main model is the `Todo` model with the following fields:
 - `created_at`: Creation timestamp
 - `updated_at`: Last update timestamp
 - `due_date`: Due date (optional)
-- `user`: Foreign key to User model
 
 ## Future Improvements
 
